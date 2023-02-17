@@ -8,6 +8,7 @@ export const SearchbarStyled = styled.header`
   justify-content: center;
   align-items: center;
   min-height: 64px;
+  margin-bottom: ${p => p.theme.spacing(4)};
   padding: ${p => p.theme.spacing(3)} ${p => p.theme.spacing(2)};
   background-color: ${p => p.theme.colors.searchBackground};
   box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
