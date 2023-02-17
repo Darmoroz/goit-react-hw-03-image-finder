@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import { ImageGalleryItemStyle } from './ImageGalleryItem.styled';
 
 export const ImageGalleryItem = ({ id, webformatURL, largeImageURL, tags }) => {
   return (
