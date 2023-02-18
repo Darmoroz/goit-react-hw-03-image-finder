@@ -32,8 +32,10 @@ export class ImageGallery extends Component {
     const { searchQuery } = this.props;
     const { page, search } = this.state;
     try {
+      if (prevProps.searchQuery !== searchQuery) {
+        this.setState({ images: [], search: searchQuery });
+      }
       if (prevState.search !== searchQuery || prevState.page !== page) {
-        console.log('era');
         this.setState({ search: searchQuery, loading: true });
         const res = fetchImages(search, page);
         res.then(({ hits }) => {
@@ -50,6 +52,7 @@ export class ImageGallery extends Component {
           );
           this.setState(prevState => ({
             images: [...prevState.images, ...newImages],
+            loading: false,
           }));
         });
       }
@@ -67,15 +70,23 @@ export class ImageGallery extends Component {
     this.setState(prevState => ({ page: prevState.page + 1 }));
   };
 
-  // handleClickImg = e => {
-  //   if (e.target.nodeName === 'IMG') {
-  //     this.setState({ largeImageURL: e.target, tags: e.target });
-  //     this.toggleModal();
-  //   }
-  // };
+  handleClickImg = e => {
+    const { nodeName, attributes } = e.target;
+    if (nodeName === 'IMG') {
+      console.log(attributes);
+      this.setState({
+        showModal: true,
+        largeImageURL: attributes['data-large-image'].value,
+        tags: attributes.alt.value,
+      });
+      console.dir(e.target);
+      // this.setState({ largeImageURL: e.target, tags: e.target });
+      // this.toggleModal();
+    }
+  };
 
   render() {
-    const { showModal, images, largeImageURL, tags } = this.state;
+    const { showModal, images, largeImageURL, tags, loading } = this.state;
     console.log(images);
     return (
       <>
@@ -98,7 +109,7 @@ export class ImageGallery extends Component {
             );
           })}
         </ImageGalleryGrid>
-        <Loader />
+        {loading && <Loader />}
         <Button loadMore={this.handleLoadMore} />
       </>
     );

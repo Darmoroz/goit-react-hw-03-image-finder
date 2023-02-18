@@ -5,6 +5,8 @@ import { ImageGallery } from './ImageGallery/ImageGallery';
 export class App extends Component {
   state = {
     searchQuery: '',
+    image: [],
+    page: '',
   };
   // componentDidMount() {}
   // componentWillUnmount() {}
