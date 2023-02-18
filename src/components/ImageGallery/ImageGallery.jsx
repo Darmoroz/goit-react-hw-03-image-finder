@@ -31,12 +31,12 @@ export class ImageGallery extends Component {
   componentDidUpdate(prevProps, prevState) {
     const { searchQuery } = this.props;
     const { page, search } = this.state;
+    if (prevProps.searchQuery !== searchQuery) {
+      this.setState({ images: [], search: searchQuery });
+    }
     try {
-      if (prevProps.searchQuery !== searchQuery) {
-        this.setState({ images: [], search: searchQuery });
-      }
-      if (prevState.search !== searchQuery || prevState.page !== page) {
-        this.setState({ search: searchQuery, loading: true });
+      if (prevState.search !== search || prevState.page !== page) {
+        this.setState({ loading: true });
         const res = fetchImages(search, page);
         res.then(({ hits }) => {
           if (!hits) {
