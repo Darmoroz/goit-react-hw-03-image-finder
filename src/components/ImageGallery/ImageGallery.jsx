@@ -14,7 +14,6 @@ export class ImageGallery extends Component {
   };
   state = {
     images: [],
-    totalHits: 0,
     loading: false,
     showModal: false,
     page: 1,
@@ -39,8 +38,8 @@ export class ImageGallery extends Component {
         this.setState({ loading: true });
         const res = fetchImages(search, page);
         res.then(({ hits }) => {
-          if (!hits) {
-            throw new Error('We have nothing for this query');
+          if (!hits.length) {
+            alert('We have nothing for this query');
           }
           const newImages = hits.map(
             ({ id, webformatURL, largeImageURL, tags }) => ({
@@ -73,21 +72,16 @@ export class ImageGallery extends Component {
   handleClickImg = e => {
     const { nodeName, attributes } = e.target;
     if (nodeName === 'IMG') {
-      console.log(attributes);
       this.setState({
         showModal: true,
         largeImageURL: attributes['data-large-image'].value,
         tags: attributes.alt.value,
       });
-      console.dir(e.target);
-      // this.setState({ largeImageURL: e.target, tags: e.target });
-      // this.toggleModal();
     }
   };
 
   render() {
     const { showModal, images, largeImageURL, tags, loading } = this.state;
-    console.log(images);
     return (
       <>
         {showModal && (
