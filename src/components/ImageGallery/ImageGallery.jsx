@@ -20,6 +20,7 @@ export class ImageGallery extends Component {
     search: '',
     largeImageURL: '',
     tags: '',
+    totalHits: null,
   };
   componentDidMount() {
     const { searchQuery } = this.props;
@@ -31,13 +32,13 @@ export class ImageGallery extends Component {
     const { searchQuery } = this.props;
     const { page, search } = this.state;
     if (prevProps.searchQuery !== searchQuery) {
-      this.setState({ images: [], search: searchQuery });
+      this.setState({ images: [], search: searchQuery, page: 1 });
     }
     try {
       if (prevState.search !== search || prevState.page !== page) {
         this.setState({ loading: true });
         const res = fetchImages(search, page);
-        res.then(({ hits }) => {
+        res.then(({ hits, totalHits }) => {
           if (!hits.length) {
             alert('We have nothing for this query');
           }
@@ -52,6 +53,7 @@ export class ImageGallery extends Component {
           this.setState(prevState => ({
             images: [...prevState.images, ...newImages],
             loading: false,
+            totalHits,
           }));
         });
       }
@@ -81,7 +83,8 @@ export class ImageGallery extends Component {
   };
 
   render() {
-    const { showModal, images, largeImageURL, tags, loading } = this.state;
+    const { showModal, images, largeImageURL, tags, loading, totalHits } =
+      this.state;
     return (
       <>
         {showModal && (
@@ -104,7 +107,7 @@ export class ImageGallery extends Component {
           })}
         </ImageGalleryGrid>
         {loading && <Loader />}
-        <Button loadMore={this.handleLoadMore} />
+        {images.length < totalHits && <Button loadMore={this.handleLoadMore} />}
       </>
     );
   }
